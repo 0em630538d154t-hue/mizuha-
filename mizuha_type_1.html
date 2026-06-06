@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MIZUHA | 🌊 澄流（すみながれ）</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Noto+Sans+JP:wght@300;400&family=Noto+Serif+JP:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --off-white: #fdfcf8;
+      --warm-beige: #f4f0e8;
+      --soft-blue: #d7edf2;
+      --text: #344f57;
+      --muted: #5f7378;
+      --deep: #263f46;
+      --gold: #b8a56f;
+      --line: rgba(52,79,87,0.14);
+      --accent: #a8cdd6;
+      --accent-light: #e4f3f6;
+      --accent-text: #2a5f6a;
+      --serif: "Noto Serif JP", serif;
+      --latin: "Cormorant Garamond", Georgia, serif;
+      --sans: "Noto Sans JP", sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--off-white);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 16px;
+      font-weight: 300;
+      line-height: 1.9;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    /* HERO */
+    .hero {
+      position: relative;
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 80px 32px 60px;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse at 60% 20%, rgba(184,165,111,0.10), transparent 55%),
+        linear-gradient(180deg, var(--accent-light) 0%, var(--off-white) 100%);
+    }
+    .hero-water { position: absolute; inset: 0; pointer-events: none; }
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid rgba(52,79,87,0.10);
+    }
+    .r1 { width: 280px; height: 112px; bottom: 20%; left: 50%; transform: translateX(-50%) rotate(-3deg); border-color: var(--accent); opacity: 0.4; }
+    .r2 { width: 480px; height: 192px; bottom: 13%; left: 50%; transform: translateX(-50%) rotate(-3deg); border-color: var(--accent); opacity: 0.25; }
+    .r3 { width: 680px; height: 272px; bottom: 6%; left: 50%; transform: translateX(-50%) rotate(-3deg); opacity: 0.15; }
+    .moon {
+      position: absolute;
+      top: 10%; right: 12%;
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #fffdf4 0 38%, rgba(255,253,244,0.7) 56%, transparent 76%);
+      box-shadow: 0 0 40px rgba(184,165,111,0.28);
+    }
+    .type-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 18px;
+      border-radius: 999px;
+      background: var(--accent-light);
+      border: 1px solid var(--accent);
+      font-family: var(--latin);
+      font-size: 12px;
+      letter-spacing: 0.10em;
+      color: var(--accent-text);
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: clamp(38px, 9vw, 64px);
+      color: var(--deep);
+      line-height: 1.3;
+      margin-bottom: 8px;
+    }
+    .hero-reading {
+      font-family: var(--latin);
+      font-size: clamp(16px, 3vw, 22px);
+      color: var(--muted);
+      margin-bottom: 12px;
+      letter-spacing: 0.08em;
+    }
+    .hero-score {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 40px;
+    }
+    .scroll-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 52px;
+      padding: 14px 36px;
+      border: 1px solid rgba(184,165,111,0.58);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.62);
+      font-family: var(--serif);
+      font-size: 15px;
+      color: var(--deep);
+      transition: transform 400ms ease, background 400ms ease;
+    }
+    .scroll-btn:hover { transform: translateY(-2px); background: rgba(255,255,255,0.85); }
+
+    /* SECTIONS */
+    .section {
+      padding: clamp(64px, 9vw, 110px) clamp(24px, 6vw, 48px);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .section-label {
+      font-family: var(--latin);
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      color: var(--gold);
+      margin-bottom: 18px;
+    }
+    h2 {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: clamp(21px, 4.5vw, 30px);
+      color: var(--deep);
+      line-height: 1.65;
+      margin-bottom: 26px;
+    }
+    p {
+      color: var(--text);
+      font-size: 15px;
+      line-height: 2;
+      margin-bottom: 18px;
+    }
+    p:last-child { margin-bottom: 0; }
+    .divider {
+      width: 40px; height: 1px;
+      background: rgba(184,165,111,0.45);
+      margin: 0 auto 56px;
+    }
+
+    /* STATE */
+    .state-section {
+      background: var(--accent-light);
+    }
+    .state-text {
+      font-family: var(--serif);
+      font-size: clamp(20px, 4.5vw, 28px);
+      color: var(--accent-text);
+      line-height: 1.8;
+      margin-bottom: 24px;
+    }
+
+    /* MESSAGE */
+    .message-block {
+      border-left: 2px solid var(--accent);
+      padding-left: 24px;
+      margin: 32px 0;
+    }
+    .message-block p {
+      font-family: var(--serif);
+      font-size: clamp(16px, 3.5vw, 20px);
+      color: var(--deep);
+      line-height: 2.1;
+      white-space: pre-line;
+    }
+
+    /* MENU */
+    .menu-section {
+      background: var(--warm-beige);
+    }
+    .menu-grid { display: grid; gap: 12px; margin-top: 28px; }
+    .menu-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 22px;
+      border: 1px solid rgba(52,79,87,0.14);
+      border-radius: 8px;
+      background: rgba(255,255,255,0.72);
+      transition: transform 350ms ease, background 350ms ease;
+    }
+    .menu-btn:hover { transform: translateX(4px); background: rgba(255,255,255,0.92); }
+    .menu-btn-inner { display: flex; align-items: center; gap: 14px; }
+    .menu-name {
+      font-family: var(--serif);
+      font-size: 16px;
+      color: var(--deep);
+      display: block;
+    }
+    .menu-desc { font-size: 12px; color: var(--muted); display: block; margin-top: 2px; }
+    .menu-arrow { color: var(--gold); font-family: var(--latin); font-size: 18px; }
+
+    /* LINE CTA */
+    .line-cta {
+      background: linear-gradient(180deg, var(--soft-blue), #edf7f8);
+      text-align: center;
+    }
+    .line-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 52px;
+      padding: 14px 40px;
+      border: 1px solid rgba(184,165,111,0.6);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.68);
+      font-family: var(--serif);
+      font-size: 15px;
+      color: var(--deep);
+      margin-top: 28px;
+      transition: transform 350ms ease;
+    }
+    .line-btn:hover { transform: translateY(-2px); }
+
+    /* CLOSING */
+    .closing { text-align: center; }
+    .closing-text {
+      font-family: var(--serif);
+      font-size: clamp(16px, 3.5vw, 21px);
+      color: var(--deep);
+      line-height: 2.1;
+      margin-bottom: 28px;
+    }
+    .brand-name {
+      font-family: var(--latin);
+      font-size: 26px;
+      color: var(--deep);
+      letter-spacing: 0.06em;
+    }
+    .back-link {
+      display: inline-block;
+      margin-top: 32px;
+      font-size: 13px;
+      color: var(--muted);
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 2px;
+    }
+
+    /* REVEAL */
+    .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 900ms ease, transform 900ms ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    footer {
+      padding: 36px 24px;
+      text-align: center;
+      border-top: 1px solid var(--line);
+      font-size: 13px;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-water" aria-hidden="true">
+      <span class="moon"></span>
+      <span class="ripple r1"></span>
+      <span class="ripple r2"></span>
+      <span class="ripple r3"></span>
+    </div>
+    <div class="type-badge reveal">🌊 Type 1</div>
+    <h1 class="reveal">澄流</h1>
+    <p class="hero-reading reveal">（すみながれ）</p>
+    <p class="hero-score reveal">スコア 29〜36点</p>
+    <a class="scroll-btn reveal" href="#state">読み解く</a>
+  </section>
+
+  <!-- STATE -->
+  <section id="state" class="state-section">
+    <div class="section reveal">
+      <p class="section-label">Your state</p>
+      <p class="state-text">流れが、澄んでいます。</p>
+      <p>心・身体・意識のバランスが自然に整っている状態。本来の自分と、ちゃんとつながれています。</p>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- MEANING -->
+  <section>
+    <div class="section reveal">
+      <p class="section-label">What it means</p>
+      <h2>今の意味</h2>
+      <p>こういう時期だからこそ、流れをさらに深める時間を持てると、次のステージへ静かに移っていけます。今は「拡張」のフェーズ。外へ向かうより、内側をさらに豊かにするタイミングです。</p>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- MESSAGE -->
+  <section>
+    <div class="section reveal">
+      <p class="section-label">Message</p>
+      <div class="message-block">
+        <p>無理に動かさなくて大丈夫です。
+今は、流れを『観察すること』がテーマです。
+澄んでいるからこそ、深く見える景色があります。</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- MENU -->
+  <section class="menu-section">
+    <div class="section reveal">
+      <p class="section-label">For you</p>
+      <h2>あなたに合う<br />サポートはこちら</h2>
+      <p>気になるものから、そっと手を伸ばしてみてください。</p>
+      <div class="menu-grid">
+        <a class="menu-btn" href="#meguri">
+          <span class="menu-btn-inner">
+            <span>
+              <span class="menu-name">🌙 MEGURI</span>
+              <span class="menu-desc">流れ・タイミング・選択</span>
+            </span>
+          </span>
+          <span class="menu-arrow">→</span>
+        </a>
+        <a class="menu-btn" href="#utsushi">
+          <span class="menu-btn-inner">
+            <span>
+              <span class="menu-name">🪞 UTSUSHI</span>
+              <span class="menu-desc">心・気づき・内観</span>
+            </span>
+          </span>
+          <span class="menu-arrow">→</span>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- LINE CTA -->
+  <section class="line-cta">
+    <div class="section reveal">
+      <p class="section-label">Contact</p>
+      <h2>気になったら、<br />まず話してみてください。</h2>
+      <p>気になるものがあれば、無理に選ばなくて大丈夫です。<br />今の感覚で「少し気になる」ものを選んでください。</p>
+      <a class="line-btn" href="#">LINEで相談する</a>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- CLOSING -->
+  <section class="closing">
+    <div class="section reveal">
+      <p class="section-label">From Saerri</p>
+      <p class="closing-text">今の状態は、<br />そのままで大丈夫です。</p>
+      <p>必要なときに、またここに戻ってきてください。<br />そのときのあなたに合う形で整えていきます。</p>
+      <br /><br />
+      <p class="brand-name">MIZUHA</p>
+      <a class="back-link" href="mizuha_result.html">← 結果ページに戻る</a>
+    </div>
+  </section>
+
+  <footer><p>&copy; MIZUHA | Saerri</p></footer>
+
+  <script>
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -30px 0px' });
+    reveals.forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
