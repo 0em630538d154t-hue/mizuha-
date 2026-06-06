@@ -1,0 +1,506 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MIZUHA | 水の状態チェック</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Noto+Sans+JP:wght@300;400&family=Noto+Serif+JP:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --off-white: #fdfcf8;
+      --warm-beige: #f4f0e8;
+      --soft-blue: #d7edf2;
+      --text: #344f57;
+      --muted: #5f7378;
+      --deep: #263f46;
+      --gold: #b8a56f;
+      --line: rgba(52,79,87,0.14);
+      --serif: "Noto Serif JP", serif;
+      --latin: "Cormorant Garamond", Georgia, serif;
+      --sans: "Noto Sans JP", sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--off-white);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 16px;
+      font-weight: 300;
+      line-height: 1.9;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* HERO */
+    .hero {
+      position: relative;
+      min-height: 60svh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 80px 32px 60px;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse at 60% 20%, rgba(184,165,111,0.12), transparent 55%),
+        linear-gradient(180deg, #eaf6f7 0%, var(--off-white) 100%);
+    }
+    .moon {
+      position: absolute;
+      top: 12%; right: 12%;
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #fffdf4 0 38%, rgba(255,253,244,0.7) 56%, transparent 76%);
+      box-shadow: 0 0 40px rgba(184,165,111,0.28);
+      pointer-events: none;
+    }
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid rgba(52,79,87,0.10);
+      pointer-events: none;
+    }
+    .r1 { width: 300px; height: 120px; bottom: 16%; left: 50%; transform: translateX(-50%) rotate(-3deg); }
+    .r2 { width: 500px; height: 200px; bottom: 8%; left: 50%; transform: translateX(-50%) rotate(-3deg); border-color: rgba(184,165,111,0.14); }
+
+    .hero-label {
+      font-family: var(--latin);
+      font-size: 13px;
+      letter-spacing: 0.14em;
+      color: var(--gold);
+      margin-bottom: 18px;
+    }
+    .hero h1 {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: clamp(24px, 5.5vw, 38px);
+      color: var(--deep);
+      line-height: 1.6;
+      margin-bottom: 14px;
+    }
+    .hero-sub {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.85;
+      margin-bottom: 10px;
+    }
+
+    /* FORM */
+    .form-wrap {
+      max-width: 620px;
+      margin: 0 auto;
+      padding: clamp(48px, 8vw, 88px) clamp(24px, 6vw, 48px);
+    }
+
+    .section-title {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: clamp(18px, 4vw, 24px);
+      color: var(--deep);
+      margin-bottom: 8px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .section-label {
+      font-family: var(--latin);
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+
+    .section-block {
+      margin-bottom: 56px;
+    }
+
+    .q-block {
+      margin-bottom: 36px;
+    }
+
+    .q-text {
+      font-size: 15px;
+      color: var(--deep);
+      margin-bottom: 14px;
+      line-height: 1.75;
+    }
+
+    .choices {
+      display: grid;
+      gap: 8px;
+    }
+
+    .choice {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255,255,255,0.6);
+      cursor: pointer;
+      transition: background 300ms ease, border-color 300ms ease;
+      font-size: 14px;
+      color: var(--text);
+    }
+
+    .choice:hover {
+      background: rgba(215,237,242,0.4);
+      border-color: rgba(184,165,111,0.4);
+    }
+
+    .choice input[type="radio"] {
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border: 1px solid rgba(52,79,87,0.3);
+      border-radius: 50%;
+      flex-shrink: 0;
+      position: relative;
+      transition: border-color 300ms ease;
+    }
+
+    .choice input[type="radio"]:checked {
+      border-color: var(--gold);
+      background: var(--gold);
+    }
+
+    .choice input[type="radio"]:checked::after {
+      content: "";
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: white;
+    }
+
+    .choice:has(input:checked) {
+      background: rgba(184,165,111,0.12);
+      border-color: rgba(184,165,111,0.5);
+    }
+
+    /* PROGRESS */
+    .progress-wrap {
+      margin-bottom: 40px;
+    }
+    .progress-label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .progress-bar {
+      height: 3px;
+      background: var(--line);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--soft-blue), var(--gold));
+      border-radius: 999px;
+      transition: width 600ms ease;
+      width: 0%;
+    }
+
+    /* SUBMIT */
+    .submit-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 56px;
+      padding: 16px 32px;
+      border: 1px solid rgba(184,165,111,0.6);
+      border-radius: 999px;
+      background: rgba(184,165,111,0.15);
+      font-family: var(--serif);
+      font-size: 16px;
+      color: var(--deep);
+      cursor: pointer;
+      transition: transform 350ms ease, background 350ms ease;
+      margin-top: 40px;
+    }
+    .submit-btn:hover { transform: translateY(-2px); background: rgba(184,165,111,0.25); }
+    .submit-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+    /* ERROR */
+    .error-msg {
+      display: none;
+      color: #b85a5a;
+      font-size: 13px;
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    /* DIVIDER */
+    .divider {
+      width: 40px; height: 1px;
+      background: rgba(184,165,111,0.4);
+      margin: 48px auto;
+    }
+
+    /* REVEAL */
+    .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 900ms ease, transform 900ms ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    footer {
+      padding: 36px 24px;
+      text-align: center;
+      border-top: 1px solid var(--line);
+      font-size: 13px;
+      color: var(--muted);
+      font-family: var(--latin);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div aria-hidden="true">
+      <span class="moon"></span>
+      <span class="ripple r1"></span>
+      <span class="ripple r2"></span>
+    </div>
+    <p class="hero-label reveal">MIZUHA</p>
+    <h1 class="reveal">水の状態チェック</h1>
+    <p class="hero-sub reveal">心・身体・意識の3つの軸から、<br />今のあなたの状態を見つめていきます。<br />所要時間：3〜5分</p>
+  </section>
+
+  <!-- FORM -->
+  <div class="form-wrap">
+
+    <!-- プログレスバー -->
+    <div class="progress-wrap reveal">
+      <p class="progress-label" id="progress-label">0 / 12問</p>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+    </div>
+
+    <form id="check-form">
+
+      <!-- 心 -->
+      <div class="section-block reveal">
+        <p class="section-label">Heart</p>
+        <h2 class="section-title">🫀 心（こころ）</h2>
+        <div class="divider"></div>
+
+        <div class="q-block">
+          <p class="q-text">Q1. 最近、自分の感情に気づいていますか？</p>
+          <div class="choices">
+            <label class="choice"><input type="radio" name="q1" value="3" /> A. ちゃんと感じられている</label>
+            <label class="choice"><input type="radio" name="q1" value="2" /> B. 時々、何を感じているかわからなくなる</label>
+            <label class="choice"><input type="radio" name="q1" value="1" /> C. 感情が遠い気がする</label>
+            <label class="choice"><input type="radio" name="q1" value="0" /> D. 感じることが怖い</label>
+          </div>
+        </div>
+
+        <div class="q-block">
+          <p class="q-text">Q2. 誰かに「大丈夫？」と聞かれたとき、どう答えますか？</p>
+          <div class="choices">
+            <label class="choice"><input type="radio" name="q2" value="3" /> A. 正直に話せる</label>
+            <label class="choice"><input type="radio" name="q2" value="2" /> B. 「大丈夫」と言いながら、少し無理している</label>
+            <label class="choice"><input type="radio" name="q2" value="1" /> C. 反射的に「大丈夫」と言ってしまう</label>
+            <label class="choice"><input type="radio" name="q2" value="0" /> D. 聞かれたくないと感じる</label>
+          </div>
+        </div>
+
+        <div class="q-block">
+          <p class="q-text">Q3. 自分を責めることはありますか？</p>
+          <div class="choices">
+            <label class="choice"><input type="radio" name="q3" value="3" /> A. あまりない</label>
+            <label class="choice"><input type="radio" name="q3" value="2" /> B. 時々ある</label>
+            <label class="choice"><input type="radio" name="q3" value="1" /> C. よくある</label>
+            <label class="choice"><input type="radio" name="q3" value="0" /> D. ほぼ毎日ある</label>
+          </div>
+        </div>
+
+        <div class="q-block">
+          <p class="q-text">Q4. 「本来の自分」という言葉を聞いて、何を感じますか？</p>
+          <div class="choices">
+            <label class="choice"><input type="radio" name="q4" value="3" /> A. なんとなくわかる気がする</label>
+            <label class="choice"><input type="radio" name="q4" value="2" /> B. 少し遠い感じがする</label>
+            <label class="choice"><input type="radio" name="q4" value="1" /> C. よくわからない</label>
+            <label class="choice"><input type="radio" name="q4" value="0" /> D. 考えたくない</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- 身体 -->
+      <div class="section-block reveal">
+        <p class="section-label">Body</p>
+        <h2 class="section-title">💧 身体（からだ）</h2>
+        <div class="divider"></div>
+
+        <div class="q-block">
+          <p class="q-text">Q5. 朝起きたとき、身体の状態はどうですか？</p>
+          <div class="choices">
+            <label class="choice"><input type="radio" name="q5" value="3" /> A. すっきりしていることが多い</label>
+            <label class="choice"><input type="radio" name="q5" value="2" /> B. 少し重さが残っている</label>
+            <label class="choice"><input type="radio" name="q5" value="1" /> C. 疲れが取れていない</label>
+            <label class="choice"><input type="radio" name="q5" value="0" /> D. 起きることがつらい</label>
+          </div>
+        </div>
+
+        <div class="q-block">
+          <p class="q-text">Q6. 食事との関係はどうですか？</p>
+          <div class="choices">
+            <label class="choice"><input type="radio" name="q6" value="3" /> A. 整っていて、食べることが楽しい</label>
+            <label class="choice"><input type="radio" name="q6" value="2" /> B. 乱れがちで、少し気になっている</label>
+            <label class="choice"><input type="radio" name="q6" value="1" /> C. 食べることが義務になっている</label>
+            <label class="choice"><input type="radio" name="q6" value="0" /> D. 食欲がなかったり、逆に止まらないことがある</label>
+          </div>
+        </div>
+
+        <div class="q-block">
+          <p class="q-text">Q7. 身体のどこかに、慢性的な不調はありますか？</p>
+          <div class="choices">
+            <label class="choice"><input type="radio" name="q7" value="3" /> A. 特にない</label>
+            <label class="choice"><input type="radio" name="q7" value="2" /> B. 気になる部分が少しある</label>
+            <label class="choice"><input type="radio" name="q7" value="1" /> C. いくつかある</label>
+            <label class="choice"><input type="radio" name="q7" value="0" /> D. ずっと続いている不調がある</label>
+          </div>
+        </div>
+
+        <div class="q-block">
+          <p class="q-text">Q8. 深呼吸を、意識的にしていますか？</p>
+          <div class="choices">
+            <label class="choice"><input type="radio" name="q8" value="3" /> A. よくしている</label>
+            <label class="choice"><input type="radio" name="q8" value="2" /> B. たまにする</label>
+            <label class="choice"><input type="radio" name="q8" value="1" /> C. ほとんどしない</label>
+            <label class="choice"><input type="radio" name="q8" value="0" /> D. 呼吸が浅いと感じる</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- 意識 -->
+      <div class="section-block reveal">
+        <p class="section-label">Mind</p>
+        <h2 class="section-title">🌙 意識（いしき）</h2>
+        <div class="divider"></div>
+
+        <div class="q-block">
+          <p class="q-text">Q9. 今の自分の状態を、言葉にできますか？</p>
+          <div class="choices">
+            <label class="choice"><input type="radio" name="q9" value="3" /> A. 言葉にできる</label>
+            <label class="choice"><input type="radio" name="q9" value="2" /> B. 漠然とはわかる</label>
+            <label class="choice"><input type="radio" name="q9" value="1" /> C. よくわからない</label>
+            <label class="choice"><input type="radio" name="q9" value="0" /> D. 考えたくない</label>
+          </div>
+        </div>
+
+        <div class="q-block">
+          <p class="q-text">Q10. 「休んでいい」と思えていますか？</p>
+          <div class="choices">
+            <label class="choice"><input type="radio" name="q10" value="3" /> A. 思える</label>
+            <label class="choice"><input type="radio" name="q10" value="2" /> B. 頭ではわかっているけど、できない</label>
+            <label class="choice"><input type="radio" name="q10" value="1" /> C. 休むことに罪悪感がある</label>
+            <label class="choice"><input type="radio" name="q10" value="0" /> D. 休み方がわからない</label>
+          </div>
+        </div>
+
+        <div class="q-block">
+          <p class="q-text">Q11. 直感や、身体の声を信じていますか？</p>
+          <div class="choices">
+            <label class="choice"><input type="radio" name="q11" value="3" /> A. 信じている</label>
+            <label class="choice"><input type="radio" name="q11" value="2" /> B. 気になるけど、無視してしまうことが多い</label>
+            <label class="choice"><input type="radio" name="q11" value="1" /> C. あまり信じていない</label>
+            <label class="choice"><input type="radio" name="q11" value="0" /> D. 聞こえない気がする</label>
+          </div>
+        </div>
+
+        <div class="q-block">
+          <p class="q-text">Q12. 今、自分に必要なものはわかりますか？</p>
+          <div class="choices">
+            <label class="choice"><input type="radio" name="q12" value="3" /> A. わかっている</label>
+            <label class="choice"><input type="radio" name="q12" value="2" /> B. なんとなく感じている</label>
+            <label class="choice"><input type="radio" name="q12" value="1" /> C. わからない</label>
+            <label class="choice"><input type="radio" name="q12" value="0" /> D. 考える余裕がない</label>
+          </div>
+        </div>
+      </div>
+
+      <p class="error-msg" id="error-msg">⚠️ まだ答えていない質問があります。全問答えてから送信してください。</p>
+      <button type="submit" class="submit-btn" id="submit-btn">結果を見る</button>
+
+    </form>
+  </div>
+
+  <footer>MIZUHA &copy; Saerri</footer>
+
+  <script>
+    // プログレスバー更新
+    const radios = document.querySelectorAll('input[type="radio"]');
+    const progressFill = document.getElementById('progress-fill');
+    const progressLabel = document.getElementById('progress-label');
+    const totalQ = 12;
+
+    function updateProgress() {
+      const answered = new Set();
+      document.querySelectorAll('input[type="radio"]:checked').forEach(r => answered.add(r.name));
+      const count = answered.size;
+      progressFill.style.width = (count / totalQ * 100) + '%';
+      progressLabel.textContent = count + ' / ' + totalQ + '問';
+    }
+
+    radios.forEach(r => r.addEventListener('change', updateProgress));
+
+    // フォーム送信・採点
+    document.getElementById('check-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const names = ['q1','q2','q3','q4','q5','q6','q7','q8','q9','q10','q11','q12'];
+      let total = 0;
+      let unanswered = false;
+
+      names.forEach(name => {
+        const checked = document.querySelector(`input[name="${name}"]:checked`);
+        if (!checked) {
+          unanswered = true;
+        } else {
+          total += parseInt(checked.value);
+        }
+      });
+
+      if (unanswered) {
+        const err = document.getElementById('error-msg');
+        err.style.display = 'block';
+        err.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+
+      // タイプ判定
+      let typeNum;
+      if (total >= 29) typeNum = 1;
+      else if (total >= 22) typeNum = 2;
+      else if (total >= 15) typeNum = 3;
+      else if (total >= 8) typeNum = 4;
+      else typeNum = 5;
+
+      // 結果ページへ遷移
+      const base = 'https://0em630538d154t-hue.github.io/mizuha-/';
+      window.location.href = base + 'mizuha_type_' + typeNum + '.html';
+    });
+
+    // Reveal animation
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -20px 0px' });
+    reveals.forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
